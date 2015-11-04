@@ -54,43 +54,74 @@ namespace ShookaLogReader
         private void OpenXML()
         {
             string line = "";
-            using (StreamReader reader = new StreamReader(openFileDialog1.FileName, Encoding.UTF8))
+            string directoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
+            string LogFile = directoryPath + "ShookaLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".logxml";
+            string logfileName = "ShookaLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".logxml";
+            string[] filePaths = Directory.GetFiles(directoryPath);
+            using (StreamWriter sw = new StreamWriter(LogFile, true, Encoding.UTF8))
             {
-                while (!reader.EndOfStream)
-                    line = reader.ReadLine();
+                //writing log file root
+                using (XmlTextWriter w = new XmlTextWriter(sw))
+                {
+                    sw.WriteLine("<LogFile>");
+                    using (StreamReader reader = new StreamReader(openFileDialog1.FileName, Encoding.UTF8))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            //line = reader.ReadLine();
+                            //line = EncryptionManager.Decrypt(reader.ReadLine());
+                            line = StringCipher.Decrypt(reader.ReadLine());
+                            //writer.WriteLine(line);
+
+
+                            //Writing Version and Encoding at first line of log file
+                            //w.WriteStartDocument();
+                            //start of application log. if </LogFile> will not write at end of log file,
+                            //it means unsuccessful termination of current execution
+                            sw.WriteLine(line);
+                        }
+                    }
+                }
+                //using (StreamWriter writer = new StreamWriter(openFileDialog1.FileName, true))
+                //{
+
+                //}
             }
             if (line != "</LogFile>")
             {
-                using (StreamWriter writer = new StreamWriter(openFileDialog1.FileName, true))
+                using (StreamWriter writer = new StreamWriter(LogFile, true))
                     writer.WriteLine("</LogFile>");
                 MessageBox.Show("این لاگ به صورت کامل پایان نیافته است.\nبه صورت خودکار لاگ اصلاح خواهد شد.");
             }
 
-
-            Stream input = null;
-            if ((input = openFileDialog1.OpenFile()) != null)
+            //OpenFileDialog od = new OpenFileDialog();
+            //od.FileName = LogFile;
+            //Stream input = null;
+            //if ((input = od.OpenFile()) != null)
+            //{
+            //    using (input)
+            string input = LogFile;
             {
-                using (input)
+                XmlReaderSettings settings = new XmlReaderSettings();
+                settings.CheckCharacters = false;
+                //XmlReader xmlFile = XmlReader.Create(input, settings);
+                XmlReader xmlFile = XmlReader.Create(input, settings);
+                DataSet dataSet = new DataSet();
+                dataSet.ReadXml(xmlFile);
+                xmlFile.Close();
+
+                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                 {
-                    XmlReaderSettings settings = new XmlReaderSettings();
-                    settings.CheckCharacters = false;
-                    XmlReader xmlFile = XmlReader.Create(input, settings);
-                    DataSet dataSet = new DataSet();
-                    dataSet.ReadXml(xmlFile);
-                    xmlFile.Close();
-
-                    for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                    string s = dataSet.Tables[0].Rows[i]["loggedFor"].ToString();
+                    if (!(comboBox1.SelectedIndex == 0 || comboBox1.Text == s))
                     {
-                        string s = dataSet.Tables[0].Rows[i]["loggedFor"].ToString();
-                        if (!(comboBox1.SelectedIndex == 0 || comboBox1.Text == s))
-                        {
-                            dataSet.Tables[0].Rows[i].Delete();
-                            i--;
-                        }
+                        dataSet.Tables[0].Rows[i].Delete();
+                        i--;
                     }
-
-                    dataGridView1.DataSource = dataSet.Tables[0];
                 }
+
+                dataGridView1.DataSource = dataSet.Tables[0];
+                //}
 
                 dataGridView1.Columns[0].Width = 100;
                 dataGridView1.Columns[1].Width = 100;
