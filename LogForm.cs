@@ -55,9 +55,11 @@ namespace ShookaLogReader
         {
             string line = "";
             string directoryPath = Path.GetDirectoryName(openFileDialog1.FileName);
-            string LogFile = directoryPath + "ShookaLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".logxml";
-            string logfileName = "ShookaLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".logxml";
-            string[] filePaths = Directory.GetFiles(directoryPath);
+            //string LogFile = directoryPath + "ShookaLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".logxml";
+            //string logfileName = "ShookaLog_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".logxml";
+            string logfileName = "ShookaLog.logxml";
+            string LogFile = directoryPath + logfileName;
+
             using (StreamWriter sw = new StreamWriter(LogFile, true, Encoding.UTF8))
             {
                 //writing log file root
