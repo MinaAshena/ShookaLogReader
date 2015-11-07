@@ -72,7 +72,8 @@ namespace ShookaLogReader
                         {
                             //line = reader.ReadLine();
                             //line = EncryptionManager.Decrypt(reader.ReadLine());
-                            line = StringCipher.Decrypt(reader.ReadLine());
+                            string test = reader.ReadLine();
+                            line = StringCipher.Decrypt(test);
                             //writer.WriteLine(line);
 
 

@@ -26,8 +26,6 @@ namespace ShookaLogReader
             byte[] keyBytes = password.GetBytes(keysize / 8);
             using (RijndaelManaged symmetricKey = new RijndaelManaged())
             {
-                symmetricKey.Mode = CipherMode.CBC;
-                symmetricKey.IV = initVectorBytes;
                 using (ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes))
                 {
                     using (MemoryStream memoryStream = new MemoryStream())
@@ -54,8 +52,6 @@ namespace ShookaLogReader
             byte[] keyBytes = password.GetBytes(keysize / 8);
             using (RijndaelManaged symmetricKey = new RijndaelManaged())
             {
-                symmetricKey.Mode = CipherMode.CBC;
-                symmetricKey.IV = initVectorBytes;
                 using (ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes))
                 {
                     using (MemoryStream memoryStream = new MemoryStream(cipherTextBytes))
