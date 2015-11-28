@@ -42,6 +42,7 @@ namespace ShookaLogReader
             }
             //}
         }
+       
 
         public static string Decrypt(string cipherText)
         {
@@ -52,6 +53,7 @@ namespace ShookaLogReader
             byte[] keyBytes = password.GetBytes(keysize / 8);
             using (RijndaelManaged symmetricKey = new RijndaelManaged())
             {
+                //symmetricKey.Padding = PaddingMode.None;
                 using (ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes))
                 {
                     using (MemoryStream memoryStream = new MemoryStream(cipherTextBytes))
