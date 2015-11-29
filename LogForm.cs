@@ -8,6 +8,8 @@ using System.Xml;
 
 using System.Data;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace ShookaLogReader
 {
@@ -74,14 +76,30 @@ namespace ShookaLogReader
                             //line = EncryptionManager.Decrypt(reader.ReadLine());
                             string test = reader.ReadLine();
                             line = StringCipher.Decrypt(test);
+                            string result = "";
+                            string y;
+                            if (line.Contains("messageString"))
+                            {
+                                try
+                                {
+                                    int pFrom = line.IndexOf("messageString:") + "messageString:".Length;
+                                    int pTo = line.LastIndexOf("</message>");
+
+                                    result = line.Substring(pFrom, pTo - pFrom);
+                                    line = line.Replace(result, "");
+                                    Debug.WriteLine(line);
+                                }
+                                catch (Exception ex)
+                                { }
+                            }
+                            //  line = Regex.Replace(line, ":.*?<", string.Empty);
+                            sw.WriteLine(line);
                             //writer.WriteLine(line);
-
-
+                            // GatewayServer
                             //Writing Version and Encoding at first line of log file
                             //w.WriteStartDocument();
                             //start of application log. if </LogFile> will not write at end of log file,
                             //it means unsuccessful termination of current execution
-                            sw.WriteLine(line);
                         }
                     }
                 }
