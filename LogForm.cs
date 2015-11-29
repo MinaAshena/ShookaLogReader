@@ -87,10 +87,19 @@ namespace ShookaLogReader
 
                                     result = line.Substring(pFrom, pTo - pFrom);
                                     line = line.Replace(result, "");
+                                   
                                     Debug.WriteLine(line);
                                 }
                                 catch (Exception ex)
                                 { }
+                            }
+                            //if (line.Contains("&"))
+                            while (line.Contains("&"))
+                            {
+                               
+                                    int lineposition = line.IndexOf("&");
+                                    string strreplace = "amp;";
+                                    line = line.Substring(0, lineposition - 1) + strreplace + line.Substring(lineposition + 1);
                             }
                             //  line = Regex.Replace(line, ":.*?<", string.Empty);
                             sw.WriteLine(line);
