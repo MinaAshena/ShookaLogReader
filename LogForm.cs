@@ -87,7 +87,7 @@ namespace ShookaLogReader
 
                                     result = line.Substring(pFrom, pTo - pFrom);
                                     line = line.Replace(result, "");
-                                   
+
                                     Debug.WriteLine(line);
                                 }
                                 catch (Exception ex)
@@ -96,11 +96,19 @@ namespace ShookaLogReader
                             //if (line.Contains("&"))
                             while (line.Contains("&"))
                             {
-                               
-                                    int lineposition = line.IndexOf("&");
-                                    string strreplace = "amp;";
-                                    line = line.Substring(0, lineposition - 1) + strreplace + line.Substring(lineposition + 1);
+
+                                int lineposition = line.IndexOf("&");
+                                string strreplace = "amp;";
+                                line = line.Substring(0, lineposition - 1) + strreplace + line.Substring(lineposition + 1);
                             }
+                            //var startTag = "<message>";
+                            //int startIndex = line.IndexOf(startTag) + startTag.Length;
+                            //int endIndex = line.IndexOf("</message>", startIndex);
+                            //while(line.Substring(startIndex, endIndex - startIndex).Contains("<"))
+                            //{
+                            //   line = line.Remove('<');
+                            //}
+                                //line = Regex.Replace(line, "<message>([A-Za-z]{3})</message>", "&lt;span&gt;$1&lt;/span&gt;");
                             //  line = Regex.Replace(line, ":.*?<", string.Empty);
                             sw.WriteLine(line);
                             //writer.WriteLine(line);
