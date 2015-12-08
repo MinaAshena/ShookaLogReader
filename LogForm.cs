@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-
+using System.Xml.Linq;
 using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -101,6 +101,19 @@ namespace ShookaLogReader
                                 string strreplace = "amp;";
                                 line = line.Substring(0, lineposition - 1) + strreplace + line.Substring(lineposition + 1);
                             }
+                            if (line.Contains("<>"))
+                            {
+                                int pFrom = line.IndexOf("<message>") + "<message>".Length;
+                                int pTo = line.LastIndexOf("</message>");
+
+                                result = line.Substring(pFrom, pTo - pFrom);
+                                foreach (char c in result)
+                                {
+                                    if (c == '<' || c == '>')
+                                        line = line.Replace(c.ToString(), string.Empty);
+                                }
+                                Debug.WriteLine(line);
+                            }
                             //var startTag = "<message>";
                             //int startIndex = line.IndexOf(startTag) + startTag.Length;
                             //int endIndex = line.IndexOf("</message>", startIndex);
@@ -108,7 +121,7 @@ namespace ShookaLogReader
                             //{
                             //   line = line.Remove('<');
                             //}
-                                //line = Regex.Replace(line, "<message>([A-Za-z]{3})</message>", "&lt;span&gt;$1&lt;/span&gt;");
+                            //line = Regex.Replace(line, "<message>([A-Za-z]{3})</message>", "&lt;span&gt;$1&lt;/span&gt;");
                             //  line = Regex.Replace(line, ":.*?<", string.Empty);
                             sw.WriteLine(line);
                             //writer.WriteLine(line);
