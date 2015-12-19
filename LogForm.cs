@@ -114,6 +114,21 @@ namespace ShookaLogReader
                                 }
                                 Debug.WriteLine(line);
                             }
+                            //if(line.Contains(((char)1).ToString()))
+                            //{
+                            //    line = line.Replace((char)1, ' ');
+                            //    Debug.WriteLine(line);
+                            //}
+                            int startIndex;
+                            int test1;
+                            if (line.Contains("Permissions:"))
+                            {
+                                startIndex = line.LastIndexOf("Permissions:") + "Permissions:".Length + 6;
+                                line = line.Remove(startIndex, 1);
+                                Debug.WriteLine(startIndex);
+                                Debug.WriteLine(line);
+                            }
+
                             //var startTag = "<message>";
                             //int startIndex = line.IndexOf(startTag) + startTag.Length;
                             //int endIndex = line.IndexOf("</message>", startIndex);
